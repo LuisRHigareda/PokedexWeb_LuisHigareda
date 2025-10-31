@@ -17,6 +17,11 @@ public class EditPokemonServlet extends HttpServlet {
     private static final String SPRITE_BASE =
             "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/";
 
+    private static boolean isAutoSprite(String url, int numero){
+        if(url ==null) return false;
+        String expected = SPRITE_BASE + numero +".png";
+        return url.equalsIgnoreCase(expected);
+    }
     @SuppressWarnings("unchecked")
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)

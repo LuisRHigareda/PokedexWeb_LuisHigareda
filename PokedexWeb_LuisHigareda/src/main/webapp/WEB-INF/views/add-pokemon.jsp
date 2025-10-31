@@ -4,8 +4,9 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>  
   <title>Nuevo Pokémon — Pokedex</title>
+  <link rel="icon" href="images/pb.png" type="image/png" />
   <style>
     body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:#0f172a;color:#e2e8f0}
     header,main{max-width:960px;margin:auto;padding:16px}
