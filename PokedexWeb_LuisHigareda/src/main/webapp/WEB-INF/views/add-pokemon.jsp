@@ -1,0 +1,61 @@
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Nuevo Pokémon — Pokedex</title>
+  <style>
+    body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:#0f172a;color:#e2e8f0}
+    header,main{max-width:960px;margin:auto;padding:16px}
+    .card{background:#0b1220;border:1px solid #1e293b;border-radius:16px;padding:24px;box-shadow:0 8px 24px rgba(0,0,0,.3)}
+    label{display:block;margin:.5rem 0 .25rem}
+    input,select{width:100%;padding:.7rem;border-radius:12px;border:1px solid #334155;background:#0f172a;color:#e2e8f0}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .actions{display:flex;gap:12px;margin-top:16px}
+    button,a.btn{padding:.75rem 1rem;border-radius:12px;border:none;cursor:pointer;text-decoration:none;display:inline-block}
+    button{background:#22c55e;color:#08121f;font-weight:600}
+    a.btn{background:#334155;color:#e2e8f0}
+  </style>
+</head>
+<body>
+<header><h1>Agregar nuevo Pokémon</h1></header>
+<main>
+  <div class="card">
+    <form method="post" action="${pageContext.request.contextPath}/pokemons/add">
+      <label for="nombre">Nombre</label>
+      <input id="nombre" name="nombre" required/>
+
+      <div class="row">
+        <div>
+          <label for="numero">Número</label>
+          <input id="numero" name="numero" type="number" min="1" required/>
+        </div>
+        <div>
+          <label for="tipo">Tipo</label>
+          <select id="tipo" name="tipo" required>
+            <option value="">Elige…</option>
+            <option>Agua</option><option>Fuego</option><option>Planta/Veneno</option>
+            <option>Eléctrico</option><option>Roca</option><option>Normal</option>
+            <option>Hielo</option><option>Psíquico</option><option>Dragón</option>
+          </select>
+        </div>
+      </div>
+
+      <label for="imagenUrl">URL de imagen</label>
+      <input id="imagenUrl" name="imagenUrl" type="url" placeholder="https://...png" required/>
+
+      <div class="actions">
+        <button type="submit">Guardar</button>
+        <a class="btn" href="${pageContext.request.contextPath}/pokemons">Ver lista</a>
+      </div>
+
+      <c:if test="${not empty requestScope.error}">
+        <p style="color:#fda4af;margin-top:12px">${requestScope.error}</p>
+      </c:if>
+    </form>
+  </div>
+</main>
+</body>
+</html>
