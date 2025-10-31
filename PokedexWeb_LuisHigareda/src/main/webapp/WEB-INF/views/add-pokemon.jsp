@@ -17,6 +17,7 @@
     button,a.btn{padding:.75rem 1rem;border-radius:12px;border:none;cursor:pointer;text-decoration:none;display:inline-block}
     button{background:#22c55e;color:#08121f;font-weight:600}
     a.btn{background:#334155;color:#e2e8f0}
+    small{display:block;opacity:.8;margin-top:4px}
   </style>
 </head>
 <body>
@@ -34,17 +35,28 @@
         </div>
         <div>
           <label for="tipo">Tipo</label>
-          <select id="tipo" name="tipo" required>
-            <option value="">Elige…</option>
-            <option>Agua</option><option>Fuego</option><option>Planta/Veneno</option>
-            <option>Eléctrico</option><option>Roca</option><option>Normal</option>
-            <option>Hielo</option><option>Psíquico</option><option>Dragón</option>
-          </select>
+          <input id="tipo" name="tipo" list="tipos" required placeholder="Ej. Fuego/Volador"/>
+          <datalist id="tipos">
+            <!-- Tipos base -->
+            <option value="Normal"/><option value="Fuego"/><option value="Agua"/>
+            <option value="Planta"/><option value="Eléctrico"/><option value="Hielo"/>
+            <option value="Lucha"/><option value="Veneno"/><option value="Tierra"/>
+            <option value="Volador"/><option value="Psíquico"/><option value="Bicho"/>
+            <option value="Roca"/><option value="Fantasma"/><option value="Dragón"/>
+            <option value="Siniestro"/><option value="Acero"/><option value="Hada"/>
+            <!-- Combinaciones comunes -->
+            <option value="Fuego/Volador"/><option value="Agua/Tierra"/><option value="Agua/Volador"/>
+            <option value="Planta/Veneno"/><option value="Bicho/Acero"/><option value="Roca/Tierra"/>
+            <option value="Dragón/Volador"/><option value="Psíquico/Hada"/><option value="Siniestro/Hielo"/>
+            <option value="Tierra/Acero"/><option value="Fantasma/Veneno"/><option value="Lucha/Roca"/>
+            <option value="Eléctrico/Volador"/><option value="Hielo/Agua"/><option value="Hada/Acero"/>
+          </datalist>
         </div>
       </div>
 
-      <label for="imagenUrl">URL de imagen</label>
-      <input id="imagenUrl" name="imagenUrl" type="url" placeholder="https://...png" required/>
+      <label for="imagenUrl">URL de imagen (opcional)</label>
+      <input id="imagenUrl" name="imagenUrl" type="url" placeholder="Déjalo vacío para usar sprite oficial por número"/>
+      <small>Si lo dejas vacío, se usará: https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{numero}.png</small>
 
       <div class="actions">
         <button type="submit">Guardar</button>
