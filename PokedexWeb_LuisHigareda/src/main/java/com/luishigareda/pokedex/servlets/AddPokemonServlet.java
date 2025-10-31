@@ -14,6 +14,9 @@ import java.util.List;
 @WebServlet(name = "AddPokemonServlet", urlPatterns = {"/pokemons/new", "/pokemons/add"})
 public class AddPokemonServlet extends HttpServlet {
 
+    private static final String SPRITE_BASE =
+            "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/";
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -32,17 +35,23 @@ public class AddPokemonServlet extends HttpServlet {
 
         try {
             int numero = Integer.parseInt(numeroStr);
-            if (nombre == null || nombre.isBlank() ||
-                tipo == null || tipo.isBlank() ||
-                imagenUrl == null || imagenUrl.isBlank() || numero < 1) {
+
+            if (nombre == null || nombre.isBlank()
+                    || tipo == null || tipo.isBlank()
+                    || numero < 1) {
                 throw new IllegalArgumentException("Datos incompletos o inválidos.");
+            }
+
+            // Si no se da link de la imagen, autogenerar con el número
+            if (imagenUrl == null || imagenUrl.isBlank()) {
+                imagenUrl = SPRITE_BASE + numero + ".png";
             }
 
             ServletContext ctx = getServletContext();
             List<Pokemon> pokemons = (List<Pokemon>) ctx.getAttribute("pokemons");
             pokemons.add(new Pokemon(nombre.trim(), numero, tipo.trim(), imagenUrl.trim()));
 
-            // Post/Redirect/Get para evitar reenvío
+            // Post/Redirect/Get
             resp.sendRedirect(req.getContextPath() + "/pokemons");
         } catch (Exception ex) {
             req.setAttribute("error", "Corrige los datos: " + ex.getMessage());
