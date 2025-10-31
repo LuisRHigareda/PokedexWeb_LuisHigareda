@@ -1,0 +1,79 @@
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Editar Pokémon — Pokedex</title>
+  <style>
+    body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:#0f172a;color:#e2e8f0}
+    header,main{max-width:960px;margin:auto;padding:16px}
+    .card{background:#0b1220;border:1px solid #1e293b;border-radius:16px;padding:24px;box-shadow:0 8px 24px rgba(0,0,0,.3)}
+    label{display:block;margin:.5rem 0 .25rem}
+    input{width:100%;padding:.7rem;border-radius:12px;border:1px solid #334155;background:#0f172a;color:#e2e8f0}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .actions{display:flex;gap:12px;margin-top:16px}
+    button,a.btn{padding:.75rem 1rem;border-radius:12px;border:none;cursor:pointer;text-decoration:none;display:inline-block}
+    button{background:#22c55e;color:#08121f;font-weight:600}
+    a.btn{background:#334155;color:#e2e8f0}
+    img{width:72px;height:72px;object-fit:contain;margin-left:8px}
+    small{display:block;opacity:.8;margin-top:4px}
+  </style>
+</head>
+<body>
+<header><h1>Editar Pokémon</h1></header>
+<main>
+  <div class="card">
+    <form method="post" action="${pageContext.request.contextPath}/pokemons/edit">
+      <input type="hidden" name="numeroOriginal" value="${pokemon.numero}"/>
+
+      <label for="nombre">Nombre</label>
+      <input id="nombre" name="nombre" value="${pokemon.nombre}" required/>
+
+      <div class="row">
+        <div>
+          <label for="numero">Número</label>
+          <input id="numero" name="numero" type="number" min="1" value="${pokemon.numero}" required/>
+        </div>
+        <div>
+          <label for="tipo">Tipo</label>
+          <input id="tipo" name="tipo" list="tipos" value="${pokemon.tipo}" required/>
+          <datalist id="tipos">
+            <!-- mismos tipos que en alta -->
+            <option value="Normal"/><option value="Fuego"/><option value="Agua"/>
+            <option value="Planta"/><option value="Eléctrico"/><option value="Hielo"/>
+            <option value="Lucha"/><option value="Veneno"/><option value="Tierra"/>
+            <option value="Volador"/><option value="Psíquico"/><option value="Bicho"/>
+            <option value="Roca"/><option value="Fantasma"/><option value="Dragón"/>
+            <option value="Siniestro"/><option value="Acero"/><option value="Hada"/>
+            <option value="Fuego/Volador"/><option value="Agua/Tierra"/><option value="Agua/Volador"/>
+            <option value="Planta/Veneno"/><option value="Bicho/Acero"/><option value="Roca/Tierra"/>
+            <option value="Dragón/Volador"/><option value="Psíquico/Hada"/><option value="Siniestro/Hielo"/>
+            <option value="Tierra/Acero"/><option value="Fantasma/Veneno"/><option value="Lucha/Roca"/>
+            <option value="Eléctrico/Volador"/><option value="Hielo/Agua"/><option value="Hada/Acero"/>
+          </datalist>
+        </div>
+      </div>
+
+      <label for="imagenUrl">URL de imagen (opcional)</label>
+      <div style="display:flex;align-items:center;gap:8px">
+        <input id="imagenUrl" name="imagenUrl" type="url" value="${pokemon.imagenUrl}"
+               placeholder="Déjalo vacío para usar sprite oficial por número"/>
+        <img src="${pokemon.imagenUrl}" alt="${pokemon.nombre}"/>
+      </div>
+      <small>Si lo dejas vacío, se usará: https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{numero}.png</small>
+
+      <div class="actions">
+        <button type="submit">Guardar cambios</button>
+        <a class="btn" href="${pageContext.request.contextPath}/pokemons">Volver</a>
+      </div>
+
+      <c:if test="${not empty requestScope.error}">
+        <p style="color:#fda4af;margin-top:12px">${requestScope.error}</p>
+      </c:if>
+    </form>
+  </div>
+</main>
+</body>
+</html>
