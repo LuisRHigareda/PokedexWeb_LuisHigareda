@@ -17,11 +17,12 @@ public class EditPokemonServlet extends HttpServlet {
     private static final String SPRITE_BASE =
             "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/";
 
-    private static boolean isAutoSprite(String url, int numero){
-        if(url ==null) return false;
-        String expected = SPRITE_BASE + numero +".png";
+    private static boolean isAutoSprite(String url, int numero) {
+        if (url == null) return false;
+        String expected = SPRITE_BASE + numero + ".png";
         return url.equalsIgnoreCase(expected);
     }
+
     @SuppressWarnings("unchecked")
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -60,7 +61,7 @@ public class EditPokemonServlet extends HttpServlet {
         String nombre = req.getParameter("nombre");
         String numeroStr = req.getParameter("numero");
         String tipo = req.getParameter("tipo");
-        String imagenUrl = req.getParameter("imagenUrl");
+        String imagenUrl = req.getParameter("imagenUrl"); 
 
         try {
             int numeroOriginal = Integer.parseInt(numeroOriginalStr);
@@ -70,10 +71,6 @@ public class EditPokemonServlet extends HttpServlet {
                     || tipo == null || tipo.isBlank()
                     || numero < 1) {
                 throw new IllegalArgumentException("Datos incompletos o inválidos.");
-            }
-
-            if (imagenUrl == null || imagenUrl.isBlank()) {
-                imagenUrl = SPRITE_BASE + numero + ".png";
             }
 
             ServletContext ctx = getServletContext();
@@ -87,15 +84,37 @@ public class EditPokemonServlet extends HttpServlet {
                 throw new IllegalStateException("Pokémon no encontrado.");
             }
 
+            String currentUrl = found.getImagenUrl();
+            boolean submittedBlank = (imagenUrl == null || imagenUrl.isBlank());
+            boolean userChangedUrl = !submittedBlank && !imagenUrl.trim().equals(currentUrl);
+            boolean numberChanged = (numero != numeroOriginal);
+
+            String finalUrl;
+            if (userChangedUrl) {
+                // 1) El usuario cambió la URL manualmente = se respeta
+                finalUrl = imagenUrl.trim();
+            } else if (submittedBlank) {
+                // 2) URL vacia = generar sprite por número
+                finalUrl = SPRITE_BASE + numero + ".png";
+            } else if (numberChanged && isAutoSprite(currentUrl, numeroOriginal)) {
+                // 3) Cambio el número y la URL anterior era auto = generar con el nuevo numero
+                finalUrl = SPRITE_BASE + numero + ".png";
+            } else {
+                // 4) Conservar la URL actual (personalizada o auto sin cambio de número)
+                finalUrl = currentUrl;
+            }
+
+            // Actualiza campos
             found.setNombre(nombre.trim());
             found.setNumero(numero);
             found.setTipo(tipo.trim());
-            found.setImagenUrl(imagenUrl.trim());
+            found.setImagenUrl(finalUrl);
 
+            // PRG
             resp.sendRedirect(req.getContextPath() + "/pokemons");
         } catch (Exception ex) {
             req.setAttribute("error", "Corrige los datos: " + ex.getMessage());
-            doGet(req, resp);
+            req.getRequestDispatcher("/WEB-INF/views/edit-pokemon.jsp").forward(req, resp);
         }
     }
 }
